@@ -1,6 +1,12 @@
 # gitignore-cli
 A simple CLI (Command Line Interface) to download .gitignore from http://github.com/github/gitignore/
 
+## Install
+
+Install it using:
+    pip install gitignore-cli
+
+
 ## Usage
 
 Usage: gitignore-cli [OPTIONS] COMMAND [ARGS]...
