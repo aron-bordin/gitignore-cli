@@ -15,6 +15,7 @@ Usage:
     gitignore-cli [OPTIONS] COMMAND [ARGS]...
 
 Options:
+
   --help  Show the help message and exit.
 
 Commands:
