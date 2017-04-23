@@ -18,9 +18,9 @@ Options:
   --help  Show the help message and exit.
 
 Commands:
-  download  Downloads a .gitignore given its name (append if a .gitignore already exist)
-  list      Return a list of the available .gitignores
-  search    Search a .gitignore
+  * **download**  Downloads a .gitignore given its name (append if a .gitignore already exist)
+  * **list**      Return a list of the available .gitignores
+  * **search**    Search a .gitignore
   
 ## Examples
 
