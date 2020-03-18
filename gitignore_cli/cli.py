@@ -6,9 +6,18 @@ from github import Github
 g = Github()
 repo = g.get_repo('github/gitignore')
 
+PATHS = [
+    '/',
+    '/Global/',
+    '/community/',
+]
+
 
 def get_gitignores():
-    files = repo.get_dir_contents('/')
+    files = []
+    for path in PATHS:
+        files += repo.get_contents(path)
+
     contents = [(c.name, c) for c in files if c.name.endswith('.gitignore')]
     return dict((name.replace('.gitignore', ''), content) for name, content in contents)
 
