@@ -1,10 +1,16 @@
-import click
 import base64
-from github import Github
+import click
+import sys
+
+from github import Github, GithubException
 
 
-g = Github()
-repo = g.get_repo('github/gitignore')
+try:
+    g = Github()
+    repo = g.get_repo('github/gitignore')
+except GithubException:
+    click.echo('Github API rate limit exceeded for your IP.')
+    sys.exit()
 
 PATHS = [
     '/',
@@ -18,7 +24,7 @@ def get_gitignores():
     for path in PATHS:
         files += repo.get_contents(path)
 
-    contents = [(c.name, c) for c in files if c.name.endswith('.gitignore')]
+    contents = [(c.path, c) for c in files if c.name.endswith('.gitignore')]
     return dict((name.replace('.gitignore', ''), content) for name, content in contents)
 
 
@@ -36,7 +42,7 @@ def cli():
 @cli.command()
 def list():
     """Return a list of the available .gitignores"""
-    for name in sorted(get_gitignores().keys()):
+    for name in get_gitignores().keys():
         click.echo(name)
 
 
@@ -44,20 +50,24 @@ def list():
 @click.argument('param')
 def search(param):
     """Search a .gitignore"""
-    for name in sorted(get_gitignores().keys()):
+    for name in get_gitignores().keys():
         if param in name.lower():
             click.echo(name)
 
 
-@cli.command(short_help="Downloads a .gitignore given its name (append if "
-                        "a .gitignore already exist")
+@cli.command(short_help="Downloads a .gitignore given its name (append if .gitignore already exist")
 @click.argument('name')
 def download(name):
+    original_name = name
     name = name.lower()
     for gitignore, content in get_gitignores().items():
-        if name in gitignore.lower():
+        if name == gitignore.lower():
             txt = base64.b64decode(content.content).decode('utf8')
             save_gitignore(txt)
+            break
+    else:
+        click.echo('Unable to locate ' + original_name)
+        sys.exit(-1)
 
 
 if __name__ == '__main__':
